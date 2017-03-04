@@ -1,0 +1,11 @@
+{
+  "name": "elm-infinite-zipper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {},
+  "author": "Maor Leger",
+  "license": "MIT"
+}
