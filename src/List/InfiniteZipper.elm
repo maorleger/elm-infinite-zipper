@@ -2,7 +2,7 @@ module List.InfiniteZipper
     exposing
         ( singleton
         , fromList
-        , safeFromList
+        , fromListWithDefault
         , first
         , last
         , previous
@@ -15,6 +15,8 @@ module List.InfiniteZipper
         , beginning
         , end
         , toList
+        , append
+        , push
         )
 
 {-|
@@ -27,22 +29,25 @@ When the cursor is at the beginning of the list, previous will return focus to t
 
 As an example:
 
-  InfiniteZipper.safeFromList [1, 2, 3]
-    |> InfiniteZipper.next
-    |> InfiniteZipper.next
-    |> InfiniteZipper.next
-    |> InfiniteZipper.current
-    -- 1
+    InfiniteZipper.safeFromList [1, 2, 3]
+      |> InfiniteZipper.next
+      |> InfiniteZipper.next
+      |> InfiniteZipper.next
+      |> InfiniteZipper.current
+      -- 1
 
 
 # Constructing an InfiniteZipper
-@docs singleton, fromList, safeFromList
+@docs singleton, fromList, fromListWithDefault
 
 # Moving focus
 @docs first, last, previous, next, findNext, findFirst
 
 # Getting and changing values
 @docs current, map, mapCurrent
+
+# Adding values
+@docs append, push
 
 # Checking where the cursor is
 @docs beginning, end
@@ -86,10 +91,9 @@ toList (InfiniteZipper left current right) =
 
 {-| Constructs an InfiniteZipper from a List. If the List is empty creates an InfiniteZipper with the default value as the only value
 -}
-safeFromList : a -> List a -> InfiniteZipper a
-safeFromList default xs =
-    fromList xs
-        |> Maybe.withDefault (InfiniteZipper [] default [])
+fromListWithDefault : a -> List a -> InfiniteZipper a
+fromListWithDefault default =
+    Maybe.withDefault (singleton default) << fromList
 
 
 {-| Moves the focus to the first element of the List
@@ -165,24 +169,14 @@ mapCurrent f (InfiniteZipper left current right) =
 -}
 beginning : InfiniteZipper a -> Bool
 beginning (InfiniteZipper left _ _) =
-    case left of
-        [] ->
-            True
-
-        _ ->
-            False
+    List.isEmpty left
 
 
 {-| Returns True if the InfiniteZipper is currently focused on the last element of the List
 -}
 end : InfiniteZipper a -> Bool
 end (InfiniteZipper _ _ right) =
-    case right of
-        [] ->
-            True
-
-        _ ->
-            False
+    List.isEmpty right
 
 
 {-| Returns an InfiniteZipper focused on an element that matches a given predicate if such element can be found. Starts at the beginning of the InfiniteZipper and searches forwards until the end
@@ -206,6 +200,20 @@ findNext pred zipper =
                 search <| next currentZipper
     in
         search <| next zipper
+
+
+{-| Inserts an element to the end of the InfiniteZipper, maintaining focus on the current element
+-}
+append : a -> InfiniteZipper a -> InfiniteZipper a
+append newElem (InfiniteZipper left current right) =
+    InfiniteZipper left current (right ++ [ newElem ])
+
+
+{-| Inserts an element to the beginning of the InfiniteZipper, maintaining focus on the current element
+-}
+push : a -> InfiniteZipper a -> InfiniteZipper a
+push newElem (InfiniteZipper left current right) =
+    InfiniteZipper (left ++ [ newElem ]) current right
 
 
 find : (a -> Bool) -> InfiniteZipper a -> Maybe (InfiniteZipper a)
