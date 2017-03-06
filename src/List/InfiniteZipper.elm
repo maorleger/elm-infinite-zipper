@@ -29,13 +29,24 @@ When the cursor is at the beginning of the list, previous will return focus to t
 
 As an example:
 
-    InfiniteZipper.safeFromList [1, 2, 3]
+    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]
       |> InfiniteZipper.next
       |> InfiniteZipper.next
       |> InfiniteZipper.next
       |> InfiniteZipper.current
       -- 1
 
+    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]
+      |> InfiniteZipper.push 5
+      |> InfiniteZipper.first
+      |> InfiniteZipper.current
+      -- 5
+
+    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]
+      |> InfiniteZipper.next
+      |> InfiniteZipper.mapCurrent ((+) 1)
+      |> InfiniteZIpper.current
+      -- 3
 
 # Constructing an InfiniteZipper
 @docs singleton, fromList, fromListWithDefault

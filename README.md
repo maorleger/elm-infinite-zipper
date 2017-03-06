@@ -8,7 +8,7 @@ When the cursor is at the beginning of the list, previous will return focus to t
 ## As an example:
 
 ```
-  InfiniteZipper.safeFromList [1, 2, 3]  
+  InfiniteZipper.fromListWithDefault 4 [1, 2, 3]  
     |> InfiniteZipper.next  
     |> InfiniteZipper.next  
     |> InfiniteZipper.next  
