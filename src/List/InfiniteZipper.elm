@@ -49,6 +49,9 @@ As an example:
       |> InfiniteZIpper.current
       -- 3
 
+# Types
+@docs InfiniteZipper
+
 # Constructing an InfiniteZipper
 @docs singleton, fromList, fromListWithDefault
 
@@ -71,6 +74,8 @@ As an example:
 import List exposing (reverse)
 
 
+{-| The InfiniteZipper type
+-}
 type InfiniteZipper a
     = InfiniteZipper (List a) a (List a)
 
