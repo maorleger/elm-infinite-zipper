@@ -17,6 +17,7 @@ module List.InfiniteZipper
         , toList
         , append
         , push
+        , InfiniteZipper
         )
 
 {-|
